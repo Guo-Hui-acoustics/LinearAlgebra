@@ -1,0 +1,516 @@
+% content/chapter4.tex
+\section{LU Decomposition}
+    \subsection{Summary of Elimination}
+        Elimination contains two steps:
+            \begin{itemize}
+                \item Row Operation: Perform multiplication and subtraction on rows, to convert elements under pivots to 0.
+                \item Row Permutation: Swap two rows to ensure the pivots aren't 0. 
+            \end{itemize}
+        
+        For row operation, we use \textcolor{red}{E}limination matrices. Consider the following coefficient matrice \textbf{A}:
+            \begin{equation}
+                \mathbf{A} = 
+                \begin{bmatrix}
+                    \boxed{2} & 1\\
+                    8 & \boxed{7}
+                \end{bmatrix}
+            \end{equation}
+        we want to convert the element in (row.2, column1) to 0, so we left multiply matrice A by matrice \textcolor{red}{$\mathbf{E}_{2,1}$}.
+        The operation we need to perform is :
+            \begin{equation}
+                \mathbf{row.2} - 4 \times \mathbf{row.1}
+            \end{equation}
+        so the elementary matrice $ \textbf{E}_{2,1} $ is :
+            \begin{equation}
+                \mathbf{E}_{2,1} = 
+                \begin{bmatrix}
+                    1 & 0 \\
+                    \boxed{-4} & 1
+                \end{bmatrix}
+            \end{equation}
+        and the result after elimination:
+            \begin{equation}
+                \begin{bmatrix}
+                    1 & 0 \\
+                    \boxed{-4} & 1
+                \end{bmatrix}
+                \times
+                \begin{bmatrix}
+                    \boxed{2} & 1\\
+                    8 & \boxed{7}
+                \end{bmatrix}
+                = 
+                \begin{bmatrix}
+                    \boxed{2} & 1\\
+                    0 & \boxed{3}
+                \end{bmatrix}
+            \end{equation}
+
+        For  row permutation, this situation mainly exists in when the pivots become 0, 
+        then we need to perform row permutation. Silimarly, we have \textcolor{red}{P}ermutation matrice \textbf{P}.
+        
+        After all of the operations (many times row operations and row permutation), if the matrix is good enough (all the pivots aren't 0),
+        we will get the \textcolor{red}{U}pper matrice \textbf{U}. All the elements under the pivots in this matrice are 0:
+            \begin{equation}
+                \mathbf{U} = 
+                \begin{bmatrix}
+                    \boxed{1} & 3 & 5\\
+                    0 & \boxed{6} & 7\\
+                    0 & 0 & \boxed{10}
+                \end{bmatrix}
+            \end{equation}
+        
+        Finally, both of the Elimination matrice and Permutation matrice are called Elementary matrices.
+        Elementary matrices are invertible, they represent certain operations, if we need to get their inverses,
+        we just need to think about the opposite operations.
+
+        For example, the elimination matrice:
+            \begin{equation}
+                \mathbf{E}_{2,1} = 
+                \begin{bmatrix}
+                    1 & 0 \\
+                    \boxed{-4} & 1
+                \end{bmatrix}
+            \end{equation}
+        corresponds to the following operation:
+            \begin{equation}
+                \mathbf{row.2} - 4 \times \mathbf{row.1}
+            \end{equation}
+        Then the opposite operation is :
+            \begin{equation}
+                \mathbf{row.2} + 4 \times \mathbf{row.1}
+            \end{equation}
+        so the inverse of $\mathbf{E}_{2,1}$ is :
+            \begin{equation}
+                \mathbf{E}_{2,1}^{-1}
+                = 
+                \begin{bmatrix}
+                    1 & 0 \\
+                    \boxed{4} & 1
+                \end{bmatrix}
+            \end{equation}
+        and:
+            \begin{equation}
+                \begin{bmatrix}
+                    1 & 0 \\
+                    \boxed{4} & 1
+                \end{bmatrix}
+                \times
+                \begin{bmatrix}
+                    1 & 0 \\
+                    \boxed{-4} & 1
+                \end{bmatrix}
+                =
+                \begin{bmatrix}
+                    1 & 0 \\
+                    0 & 1
+                \end{bmatrix}
+            \end{equation}
+    
+    \subsection{Some Rules about Inverse of Matrices}
+        Most importantly, if matrice \textbf{B} is the inverse of matrice \textbf{A}, then :
+            \begin{equation}
+                \mathbf{A} \mathbf{B} = \mathbf{I}
+            \end{equation}
+        \textbf{I} means it's an identity matrice.
+
+        First:
+            \begin{equation}
+                (\mathbf{A} \mathbf{B})^{-1} = ( \mathbf{B})^{-1} (\mathbf{A})^{-1}
+            \end{equation}
+        we can give a short proof. The following equation is right clearly:
+            \begin{equation}
+                (\mathbf{A} \mathbf{B})( \mathbf{B})^{-1} (\mathbf{A})^{-1} = \mathbf{I}
+            \end{equation}
+        at the same time:
+            \begin{equation}
+                ( \mathbf{B})^{-1} (\mathbf{A})^{-1} (\mathbf{A} \mathbf{B}) = \mathbf{I}
+            \end{equation}
+        Also, we have similar result:
+            \begin{equation}
+                (\mathbf{A} \mathbf{B})^{\mathrm{T}} = ( \mathbf{B})^{\mathrm{T}} (\mathbf{A})^{\mathrm{T}}
+            \end{equation}
+        
+        Second:
+            \begin{equation}
+                \mathbf{I}^{\mathrm{T}} = \mathbf{I}
+            \end{equation}
+        
+        Third, suppose a matrice \textbf{A} is an invertible square matrice, what's the inverse of $\mathbf{A}^{\mathrm{T}}$?
+        Considering the sonditions, we have:
+            \begin{equation}
+                \mathbf{A} \mathbf{A}^{-1} = \mathbf{I}
+            \end{equation}
+        Then transpose both sides of the above formula:
+            \begin{equation}
+                (\mathbf{A} \mathbf{A}^{-1})^{\mathrm{T}} = \mathbf{I}
+            \end{equation}
+        Furthermore:
+            \begin{equation}
+                 (\mathbf{A}^{-1})^{\mathrm{T}} \mathbf{A}^{\mathrm{T}} = \mathbf{I}
+            \end{equation}
+        This formula means $\mathbf{A}^\mathrm{T}$ times  $(\mathbf{A}^{-1})^{\mathrm{T}}$ produce Identity matrice.
+        So:
+            \begin{equation}
+                 (\mathbf{A}^{-1})^{\mathrm{T}} = (\mathbf{A}^{\mathrm{-1}})^{\mathrm{T}}
+            \end{equation}
+        This tells us, for a matrice $[\cdot]^{-1}$ and $[\cdot]^{-1}$ is exchangeable.
+
+    \subsection{Case Introduction: 2 by 2 Matrix}
+        Suppose matrice \textbf{A} is good enough: invertible, all the pivots is not 0, no row permutation required.
+        for example:
+            \begin{equation}
+                \mathbf{A} =
+                \begin{bmatrix}
+                    2 & 8\\
+                    1 & 7
+                \end{bmatrix}
+            \end{equation}
+        
+        Now we need to perform the row operation:
+            \begin{equation}
+                \mathbf{row.2} - 4 \times \mathbf{row.1}
+            \end{equation}
+        which corresponds to the elimination matrice $\mathbf{E}_{2,1}$:
+            \begin{equation}
+                \mathbf{E}_{2,1} = 
+                \begin{bmatrix}
+                    1 & 0 \\
+                    \boxed{-4} & 1
+                \end{bmatrix}
+            \end{equation}
+        Then we get the upper matrice \textbf{U}:
+            \begin{equation}
+                \begin{aligned}
+                    \mathbf{U} = 
+                    \mathbf{E}_{2,1} \times \mathbf{A}
+                    & = 
+                    \begin{bmatrix}
+                        2 & 1\\
+                        0 & 3
+                    \end{bmatrix}
+                \end{aligned}       
+            \end{equation}
+        So the formula can be written as:
+            \begin{equation}
+                \mathbf{E}_{2,1} \mathbf{A} = \mathbf{U}
+            \end{equation}
+        
+        Then we left multiply both sides of the above euqation by the inverse of $\mathbf{E}_{2,1}$;
+            \begin{equation}
+                \begin{aligned}
+                    \mathbf{E}_{2,1}^{-1} \mathbf{E}_{2,1} \mathbf{A} &= \mathbf{E}_{2,1}^{-1} \mathbf{U}\\
+                                                                    & = \mathbf{A}
+                \end{aligned}
+            \end{equation}       
+        Now we get the following equation:
+            \begin{equation}
+                \begin{aligned}
+                    \mathbf{A} &= \mathbf{E}_{2,1}^{-1} \mathbf{U}
+                               &= 
+                               \begin{bmatrix}
+                                    1 & 0 \\
+                                    \boxed{4} & 1
+                                \end{bmatrix}      
+                                \begin{bmatrix}
+                                    2 & 1\\
+                                    0 & 3
+                                \end{bmatrix}                 
+                \end{aligned}
+            \end{equation}  
+    
+        Consider the matrice $\mathbf{E}_{2,1}^{-1}$, we can find that, all the elements under the pivots aren't 0.
+        So we call it \textcolor{red}{L}ower matrice \textbf{L}:
+            \begin{equation}
+                \mathbf{E} \mathbf{A} =  \mathbf{U} \rightarrow \mathbf{A} =  \mathbf{L} \mathbf{U}
+            \end{equation}
+        
+        Furhtermore, 
+            \begin{equation}
+                \begin{aligned}
+                    \mathbf{A} &= \mathbf{L} \mathbf{U}
+                               &= 
+                               \begin{bmatrix}
+                                    1 & 0 \\
+                                    \boxed{4} & 1
+                                \end{bmatrix}      
+                                \begin{bmatrix}
+                                    2 & 1\\
+                                    0 & 3
+                                \end{bmatrix}   
+                                &=
+                                \begin{bmatrix}
+                                    1 & 0 \\
+                                    \boxed{4} & 1
+                                \end{bmatrix}    
+                                \begin{bmatrix}
+                                    2 & 0\\
+                                    0 & 3
+                                \end{bmatrix}  
+                                \begin{bmatrix}
+                                    1 & 1/2\\
+                                    0 & 1
+                                \end{bmatrix}  
+                                &=
+                                 \mathbf{L} \mathbf{D} \mathbf{U}          
+                \end{aligned}
+            \end{equation}  
+        \textbf{D} means it's a \textcolor{red}{D}iagonal matrice.
+        
+    \subsection{Case Introduction:3 by 3 Matrice}
+        Now we move on to a more complex case: Suppose \textbf{A} is a 3 by 3 matrice, and during the elimination we don't need to perfrom row permutation.
+        
+        Then if we want to transform \textbf{A} into an upper triangular matrice. We will need to perform the following operations:
+            \begin{equation}
+                \mathbf{E}_{3,2}\mathbf{E}_{3,1}\mathbf{E}_{2,1} \mathbf{A} = \mathbf{U}
+            \end{equation}
+
+        Considering a specific example. The original system of equations:
+            \begin{equation}
+                \left\{
+                \begin{aligned}
+                    x + 2y + z &= 0 \quad(\mathrm{row}.1)\\
+                    2x + 3y + 2z &= 1 \quad(\mathrm{row}.2)\\
+                    3x + 4y + 5z &= 3 \quad(\mathrm{row}.3)
+                \end{aligned}
+                \right.
+            \end{equation}
+        And the elimination matrices are below:
+            \begin{equation}
+                \begin{aligned}
+                    \mathbf{E}_{3,2}=
+                    \begin{bmatrix}
+                        1 & 0 & 0\\
+                        0 & 1 & 0\\
+                        0 & -5 & 1
+                    \end{bmatrix} \quad
+                    \mathbf{E}_{3,1}=
+                    \begin{bmatrix}
+                        1 & 0 & 0\\
+                        0 & 1 & 0\\
+                        0 & 0 & 1
+                    \end{bmatrix} \quad
+                    \mathbf{E}_{2,1}=
+                    \begin{bmatrix}
+                        1 & 0 & 0\\
+                        -2 & 1 & 0\\
+                        0 & 0 & 1
+                    \end{bmatrix} 
+                \end{aligned}
+            \end{equation}
+        Then left multiply \textbf{A} by all these matrices to get \textbf{U}:
+            \begin{equation}
+                \mathbf{E}_{3,2} \mathbf{E}_{3,1} \mathbf{E}_{2,1} \mathbf{A} = \mathbf{U}
+            \end{equation}
+        In fact, considering the original system, the process is as follows:
+            \begin{equation}
+                \left\{
+                \begin{aligned}
+                    \mathrm{row}.1\\
+                    \mathrm{row}.2\\
+                    \mathrm{row}.3
+                \end{aligned}
+                \right.
+                \quad \rightarrow
+                \left\{
+                \begin{aligned}
+                    &\mathrm{row}.1\\
+                    &\mathrm{row}.2 - 2\times \mathrm{row}.1\\
+                    &\mathrm{row}.3
+                \end{aligned}
+                \right.
+                \quad \rightarrow
+                \left\{
+                \begin{aligned}
+                    &\mathrm{row}.1\\
+                    &\mathrm{row}.2 - 2\times \mathrm{row}.1 \\
+                    &\mathrm{row}.3 - 5\times (\mathrm{row}.2 - 2\times \mathrm{row}.1)
+                \end{aligned}
+                \right.
+            \end{equation}
+        so if we write all these operations together:
+            \begin{equation}
+                \begin{aligned}
+                \mathbf{E} &= \mathbf{E}_{3,2} \mathbf{E}_{3,1} \mathbf{E}_{2,1}\\
+                           &= 
+                           \begin{bmatrix}
+                                1 & 0 & 0\\
+                                -2 & 1 & 0\\
+                                \boxed{10} & -5 & 1
+                              \end{bmatrix}              
+                \end{aligned}
+            \end{equation}
+        We find that in matrice \textbf{E}, besides the numbers corresponding to the row operations, 
+        an extra number appeared.
+
+        Utilize LU decomposition:
+            \begin{equation}
+                \mathbf{A} = \mathbf{E}_{2,1}^{-1} \mathbf{E}_{3,1}^{-1} \mathbf{E}_{3,2}^{-1} \mathbf{U}
+            \end{equation}
+        Considering matrice multiplication from the perspective of transformations, we can easily get:
+            \begin{equation}
+                \begin{aligned}
+                \mathbf{E}_{2,1} = 
+                        \begin{bmatrix}
+                            1 & 0 & 0\\
+                            \boxed{-2} & 1 & 0\\
+                            0 & 0 & 1
+                        \end{bmatrix} \quad \rightarrow
+                \mathbf{E}_{2,1}^{-1} = 
+                        \begin{bmatrix}
+                            1 & 0 & 0\\
+                            \boxed{2} & 1 & 0\\
+                            0 & 0 & 1
+                        \end{bmatrix}
+                \end{aligned}
+            \end{equation}
+        So the Lower matrice \textbf{L}:
+            \begin{equation}
+                \begin{aligned}
+                \mathbf{L} = \mathbf{E}^{-1} &= \mathbf{E}_{2,1}^{-1} \mathbf{E}_{3,1}^{-1} \mathbf{E}_{3,2}^{-1}\\
+                        &= 
+                        \begin{bmatrix}
+                            1 & 0 & 0\\
+                            2 & 1 & 0\\
+                            0 & 0 & 1
+                        \end{bmatrix}
+                        \begin{bmatrix}
+                            1 & 0 & 0\\
+                            0 & 1 & 0\\
+                            0 & 0 & 1
+                        \end{bmatrix}
+                        \begin{bmatrix}
+                            1 & 0 & 0\\
+                            0 & 1 & 0\\
+                            0 & 5 & 1
+                        \end{bmatrix}
+            \end{aligned}
+            \end{equation}
+        when these matrices are performed on \textbf{U}, the process is similar:
+            \begin{equation}
+                \left\{
+                \begin{aligned}
+                    \mathrm{row}.1\\
+                    \mathrm{row}.2\\
+                    \mathrm{row}.3
+                \end{aligned}
+                \right.
+                \quad \rightarrow
+                \left\{
+                \begin{aligned}
+                    &\mathrm{row}.1\\
+                    &\mathrm{row}.2 \\
+                    &\mathrm{row}.3 + 5 \times \mathrm{row}.2
+                \end{aligned}
+                \right.
+                \quad \rightarrow
+                \left\{
+                \begin{aligned}
+                    &\mathrm{row}.1\\
+                    &\mathrm{row}.2 + 2 \times \mathrm{row}.1 \\
+                    &\mathrm{row}.3 + 5 \times \mathrm{row}.2
+                \end{aligned}
+                \right.
+            \end{equation}
+        so we can easily write all the transformations together:
+            \begin{equation}
+                \mathbf{E}^{-1}  = 
+                \begin{bmatrix}
+                            1 & 0 & 0\\
+                            2 & 1 & 0\\
+                            \boxed{0} & 5 & 1
+                        \end{bmatrix}
+            \end{equation}
+        
+    \subsection{Why do We Use $\mathbf{E}^{-1}$ and LU Decomposition?}
+        Why do We Use $\mathbf{E}^{-1}$: 
+        
+        From $\mathbf{E}_{x,y}^{-1}$ to \textbf{L}, 
+        we only need to fill all the numbers with respect to row operations in the corresponding positions.
+
+        \noindent Why do We Use LU Decomposition?
+
+        The LU decomposition is:
+            \begin{equation}
+                \mathbf{A} = \mathbf{L} \mathbf{U}
+            \end{equation}
+        After we finish LU decomposition, we get \textbf{L} and \textbf{U},
+        then all the information about \textbf{A} is contained in  \textbf{L} and \textbf{U}.
+
+    \subsection{How many times have We Carried out the Elimination?}
+        Suppose one times multiplication + one times subtraction means \textbf{one times operation}.
+        
+        Considering a n by n matrice with no 0 in the pivots, and we don't need to perform row permutation.
+        Then when we perform one times row operation, we use one row to subtract x times another row.
+        As there is n elements in a row, so we perform n times operations.
+
+        Now suppose we are perform elimination for the first pivots in $\mathrm{(row.1, col.1)}$, 
+        then we need to do $(n-1)$ times row operation, so there is :
+         \begin{equation}
+            n \times (n-1) \approx n^2 
+         \end{equation}
+        times operations.
+
+        Then to finish all the elimination, whole times operations is:
+            \begin{equation}
+                n^2 + (n-1)^2 + \cdots 1^2 \approx \frac{1}{3}n^3 
+            \end{equation}
+        To calculate this formual, we use the fundamental idea of calculus.
+
+        Then, how many times oprations we need to perform on vector \textbf{b}?
+        The answer is $n^2$.
+
+    \subsection{Row Permutation}
+        Now let's consider row permutation.
+
+        When we need to perfomr row permutation, that means there are several 0 in pivots.
+
+        Suppose a 3 by 3 matrice. Then how many kinds of row permutation are there?
+        There are the following  six situations:
+            \begin{equation}
+                \begin{aligned}
+                    \mathrm{exchange row.1 and row.2}
+                    \begin{bmatrix}
+                        0 & 1 & 0\\
+                        1 & 0 & 0\\
+                        0 & 0 & 1
+                    \end{bmatrix} \\
+                    \mathrm{exchange row.1 and row.3} 
+                    \begin{bmatrix}
+                        0 & 0 & 1\\
+                        0 & 1 & 0\\
+                        1 & 0 & 0
+                    \end{bmatrix}\\
+                    \mathrm{exchange row.2 and row.3} 
+                    \begin{bmatrix}
+                        1 & 0 & 0\\
+                        0 & 0 & 1\\
+                        0 & 1 & 0
+                    \end{bmatrix}\\
+                    \mathrm{don't exchange}
+                    \begin{bmatrix}
+                        1 & 0 & 0\\
+                        0 & 1 & 0\\
+                        0 & 0 & 1
+                    \end{bmatrix} \\
+                    \mathrm{exchange all the rows} \times 2 
+                    \begin{bmatrix}
+                        0 & 1 & 0\\
+                        0 & 0 & 1\\
+                        1 & 0 & 0
+                    \end{bmatrix}
+                    \begin{bmatrix}
+                        0 & 0 & 1\\
+                        1 & 0 & 0\\
+                        0 & 1 & 0
+                    \end{bmatrix}
+                \end{aligned}
+            \end{equation}
+        
+        \textbf{Property1}: Multiply the above matrices in pairs, you will get a matrice still in the above.
+
+        \textbf{Property2}: Use \textbf{P} to represent the above matrice, then $\mathbf{P}^{-1} = \mathbf{P}^{\mathrm{T}}$
+
+
+
+

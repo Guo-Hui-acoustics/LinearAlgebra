@@ -1,0 +1,171 @@
+% content/chapter2.tex
+\section{Matrix Multiplication and Inverse}
+    \subsection{Matrix Multiplication-Requirements and Outputs}
+    Suppose matrice A and matrice B can undergo multiplication operations, 
+    then the number of columns in matrice A must be equal to the number of rows in matrice B.
+    
+    The following operations are legal:
+        \begin{equation} \label{eq:ch3_multi1}
+            \mathbf{A}_{m\times n} \times \mathbf{B}_{n\times p}
+        \end{equation}
+    
+    So what does the formula \eqref{eq:ch3_multi1} give us? We can determine the dimensions of the results:
+        \begin{equation} \label{eq:ch3_multi2}
+            \mathbf{A}_{m\times n} \times \mathbf{B}_{n\times p} = \mathbf{C}_{m \times p}
+        \end{equation}
+    
+    \subsection{Matrix Multiplication-Methods}
+        Suppose the following equation is legal, and matrice A and B is known:
+            \begin{equation} 
+            \mathbf{A}_{m\times n} \times \mathbf{B}_{n\times p} = \mathbf{C}_{m \times p}
+        \end{equation}
+        Then how can we get matrice \textbf{C}?
+
+        The first method to solve matrice \textbf{C} is element-by-element. 
+        Suppose \textbf{C}(i, j) represents the element in the i-th row and j-th column,
+        Then we have:
+            \begin{equation}
+                \mathbf{C}_\mathrm{(i,j)} = \sum_{k=1}^n \mathbf{A}_\mathrm{(i,k)} \cdot \mathbf{B}_\mathrm{(k,j)}
+            \end{equation}
+    
+        The second method is to use linear combination of columns. We can divide matrix \textbf{A} into many columns:
+            \begin{equation}
+                 \left[
+                    \begin{array}{c:c:c}
+                    B_{11} & B_{12} & B_{13} \\
+                    B_{21} & B_{22} & B_{23} \\
+                    B_{31} & B_{32} & B_{33} \\
+                    \end{array}
+                    \right]
+            \end{equation}
+        In other words, matrice B is many columns stack together.
+        Then matrice \textbf{A} multiplies with  column vectors of \textbf{B}, the result is the linear combination of each column of \textbf{A}.
+        Finally, stack all the results together.
+        
+    \subsection{Inverse Matrix-Requirements}
+        First, let's give inverse matrices a definition:
+        Suppose \textbf{Square Matrice} \textbf{A} has an inverse, then we have the following formula:
+            \begin{equation}
+                \mathbf{A}^{-1} \mathbf{A} = \mathbf{I}\quad (\mathrm{Identity Matrix})
+            \end{equation}
+        
+        Also, for a Square matrix \textbf{A} with an inverse, we have the following equation:
+            \begin{equation}
+                \mathbf{A}^{-1} \mathbf{A} = \mathbf{A} \mathbf{A}^{-1}
+            \end{equation}
+        
+        If we say a matrice invertible, we mean it's not singular.
+        
+    \subsection{Inverse Matrix-Criterion}
+        Consider the following matrice \textbf{A}:
+            \begin{equation}
+                \textbf{A} = 
+                \begin{bmatrix}
+                    1 & 2\\
+                    3 & 6
+                \end{bmatrix}
+            \end{equation}
+        is it invertible? We have the following criterions.
+
+        First, if a matrice is invertible, then the determinant of the matrice is not 0;
+
+        Second, if we can find a non-zero column vector \textbf{x}, which satisfies:
+            \begin{equation}
+                \mathbf{A} \mathbf{x} = 0
+            \end{equation}
+        then the matrice \textbf{A} is singular.
+
+        We can give a short proof. Suppose \textbf{A} has an inverse $\mathbf{A}^{-1}$, 
+        then calculate:
+            \begin{equation}
+                \begin{aligned}
+                \mathbf{A}^{-1} \mathbf{A} \mathbf{x} &= \mathbf{A} \times 0\\
+                &= \mathbf{I} \mathbf{x} \\
+                &= 0
+                \end{aligned}
+            \end{equation}
+        because the Identity matrice \textbf{I} cann't be 0, so we deduce \textbf{x} is 0.
+        
+        However, according to our assumpption \textbf{x} is not 0 too.
+        So \textbf{A} is not invertible.
+
+    \subsection{Inverse Matrix-Gauss-Jordan's Idea}
+        Now we move on to the next step, suppose Square matrice $\mathbf{A}_{m\times m}$ is invertible,
+        then how can we get it's inverse matrice $\mathbf{A}^{-1}$?
+        We introduce \textbf{Gauss-Jordan's idea}
+
+        First, let's combine \textbf{A} and a same dimension identity matrice \textbf{I}:
+            \begin{equation}
+                \left[
+                    \begin{array}{c:c}
+                        \mathbf{A} & \mathbf{I}
+                    \end{array}
+                \right]    
+            \end{equation}
+        
+        Then, use \textbf{elementary row transformation} to transform \textbf{A} into identity matrice \textbf{I}.
+        
+        From section2, we know that each \textbf{elementary row transformation} equivalent to 
+        using the left multiplication of a  elementary matrix. So we can use the following formula to describe the process:
+            \begin{equation}
+                \begin{aligned}
+                    \mathbf{E}_m
+                    \cdots
+                    \mathbf{E}_1
+                    \left[
+                        \begin{array}{c:c}
+                            \mathbf{A} & \mathbf{I}
+                        \end{array}
+                    \right]  
+                    &= \mathbf{E} 
+                    \left[
+                        \begin{array}{c:c}
+                            \mathbf{A} & \mathbf{I}
+                        \end{array}
+                    \right]  \\
+                    & = 
+                    \left[
+                        \begin{array}{c:c}
+                            \mathbf{EA} & \mathbf{EI}
+                        \end{array}
+                    \right]  
+                    &=
+                    \left[
+                        \begin{array}{c:c}
+                            \mathbf{I} & \mathbf{EI}
+                        \end{array}
+                    \right] \\
+                    &=
+                    \left[
+                        \begin{array}{c:c}
+                            \mathbf{I} & \mathbf{?}
+                        \end{array}
+                    \right]
+                \end{aligned}
+            \end{equation}
+            as $\mathbf{EA} = \mathbf{I}$, we konw $\mathbf{E} = \mathbf{A}^{-1}$.
+
+            So after \textbf{A} becomes \textbf{I},
+                \begin{equation}
+                    \left[
+                        \begin{array}{c:c}
+                            \mathbf{I} & \mathbf{?}
+                        \end{array}
+                    \right]
+                    = 
+                    \left[
+                        \begin{array}{c:c}
+                            \mathbf{I} & \mathbf{A}^{-1}
+                        \end{array}
+                    \right]
+                \end{equation}
+
+
+
+        
+
+
+
+        
+
+    

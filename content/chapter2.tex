@@ -1,0 +1,309 @@
+% content/chapter2.tex
+\section{Matrix Elimination}
+    \subsection{Matrix Multiplication}
+        First, let's talk about a matrix multiply the right by a column vector:
+            \begin{equation}
+                \left[
+                \begin{array}{c:c:c}
+                1 & 2 & 1 \\
+                3 & 8 & 1 \\
+                0 & 4 & 1 \\
+                \hdashline
+                \multicolumn{1}{c}{\text{col.1}} & \multicolumn{1}{c}{\text{col.2}} & \multicolumn{1}{c}{\text{col.3}}
+                \end{array}
+                \right]
+                \times
+                \begin{bmatrix}
+                    3\\
+                    4\\
+                    5
+                \end{bmatrix}
+            \end{equation}
+    
+            We can regard it as a linear combination of the left matrix columns,
+            so is :
+                \begin{equation}
+                    \left[
+                    \begin{array}{c:c:c}
+                    1 & 2 & 1 \\
+                    3 & 8 & 1 \\
+                    0 & 4 & 1 \\
+                    \hdashline
+                    \multicolumn{1}{c}{\text{col.1}} & \multicolumn{1}{c}{\text{col.2}} & \multicolumn{1}{c}{\text{col.3}}
+                    \end{array}
+                    \right]
+                    \times
+                    \begin{bmatrix}
+                        3\\
+                        4\\
+                        5
+                    \end{bmatrix}
+                    = 
+                    3 \times \mathrm{col.1} + 4 \times \mathrm{col.2} + 5 \times \mathrm{col.3}
+                \end{equation}
+            According to the answer, we know a matrix multiply the right by a column vector, the answer is a column vector.
+
+            Second, let's talk about a matrix multiply the left by a row vector:
+                \begin{equation}
+                    \begin{bmatrix}
+                        3 \quad 4 \quad 5
+                    \end{bmatrix}
+                    \times
+                    \left[
+                    \begin{array}{c:c c c}
+                    \text{row.1} & a_{11} & a_{12} & a_{13} \\
+                    \hdashline
+                    \text{row.2} & a_{21} & a_{22} & a_{23} \\
+                    \hdashline
+                    \text{row.3} & a_{31} & a_{32} & a_{33}
+                    \end{array}
+                    \right]    
+                \end{equation}
+            We can regard it as a linear combination of the right matrix rows,
+            so:
+            \begin{equation}
+                    \begin{bmatrix}
+                        3 \quad 4 \quad 5
+                    \end{bmatrix}
+                    \times
+                    \left[
+                    \begin{array}{c:c c c}
+                    \text{row.1} & a_{11} & a_{12} & a_{13} \\
+                    \hdashline
+                    \text{row.2} & a_{21} & a_{22} & a_{23} \\
+                    \hdashline
+                    \text{row.3} & a_{31} & a_{32} & a_{33}
+                    \end{array}
+                    \right]    
+                    = 
+                    3 \times \mathrm{row.1} + 4 \times \mathrm{row.2} + 5 \times \mathrm{row.3}
+                \end{equation}
+            According to the answer, we know a matrix multiply the left by a row vector, the answer is a row vector.
+
+    \subsection{Pivots and Elimination}
+            Take the following system of equations as an example:
+                \begin{subequations} \label{eq:ex2.2}
+                    \begin{empheq}[left=\empheqlbrace]{align}
+                            x+2y+z &= 2  \\
+                            3x + 8y +z &= 12 \\
+                            4y + z &= 2
+                    \end{empheq}
+                \end{subequations}
+
+            We can extract the coefficient matrix:
+            \begin{equation}
+                A = \begin{bmatrix}
+                        \boxed{1} & 2 & 1 \\
+                        3 & \boxed{8} & 1 \\
+                        0 & 4 & \boxed{1}
+                    \end{bmatrix}
+            \end{equation}
+            The numbers marked in the box is the \textbf{pivots}, 
+            they are located at the diagnol of the matrix.
+
+            \textbf{Elimination} means reducing all the elements under the pivot to 0,
+            while ensuring that the pivot remains unchanged. The classic method is \textbf{Gaussian Elimination}, 
+
+            First, let's keep pivot1 (row1, column1) unchanged, 
+            reduce the elements (row2, column1; row3, column1) to 0. 
+            So we need to do:
+                \begin{equation}
+                    \text{row.2} - 2 \times \text{row.1}
+                \end{equation}
+            We get:
+                \begin{equation}
+                    \begin{bmatrix}
+                        \boxed{1} & 2 & 1 \\
+                        0 & \boxed{2} & -2 \\
+                        0 & 4 & \boxed{1}
+                    \end{bmatrix}
+                \end{equation}
+            then we find the (row3,column1) is already 0, so let's proceed.
+
+            Second, let's keep pivot2 (row2, column2) unchanged,
+            reduce the element (row3, column2) to 0. 
+            So we need to do:
+                \begin{equation}
+                    \text{row.3} - 2 \times \text{row.2}\quad (\text{don't use row.1})
+                \end{equation}
+            We get:
+                \begin{equation}
+                    \begin{bmatrix}
+                        \boxed{1} & 2 & 1 \\
+                        0 & \boxed{2} & -2 \\
+                        0 & 0 & \boxed{5}
+                    \end{bmatrix}
+                \end{equation}
+
+            Finally, we have obtained an upper triangular matrix, 
+            with all elements below the diagnol being 0.
+
+    \subsection{Back Substitution}
+        Our original idea is to solve system \eqref{eq:ex2.2}, 
+        and the Elimination tells us how to operate the coefficient matrix.
+
+        Now we introduce augment matrix:
+                \begin{equation}
+                    \left[
+                    \begin{array}{c:c}
+                    A & b 
+                    \end{array}
+                    \right]
+                    = 
+                    \left[
+                    \begin{array}{c c c:c}
+                    1 & 2 & 1 & 2 \\
+                    3 & 8 & 1 & 12\\
+                    0 & 4 & 1 & 2\\
+                    \end{array}
+                    \right]
+                \end{equation}
+        Then repeat the above operation on the entire matrix, we get:
+                \begin{equation}
+                    \begin{bmatrix}
+                        \boxed{1} & 2 & 1 & 2\\
+                        0 & \boxed{2} & -2 & 6\\
+                        0 & 0 & \boxed{5} & -10
+                    \end{bmatrix}
+                \end{equation}
+        So, we can get the system of equations after elimination:
+            \begin{subequations}
+                    \begin{empheq}[left=\empheqlbrace]{align}
+                            x+2y+z &= 2  \\
+                            2y -2z &= 6 \\
+                            5z &= -10
+                    \end{empheq}
+                \end{subequations}  
+    
+    \subsection{Matrix Operation with Row Vectors}
+        At subsection2.1, if a matrix multiplies left by a row vector, 
+        we will get a row vector, and it's the linear combination of the right matrix's rows.
+        For example:
+                \begin{equation}
+                    \begin{bmatrix}
+                        1 \quad 0 \quad 0
+                    \end{bmatrix}
+                    \times
+                    A
+                \end{equation}
+        we will get the first row of matrix A.
+
+        Then, what will we get from the following equation?
+                \begin{equation}
+                    \begin{bmatrix}
+                        1 & 0 & 0 \\
+                        0 & 1 & 0 \\
+                        0 & 0 & 1 \\
+                    \end{bmatrix}
+                    \times
+                    A
+                \end{equation}
+        The left matrix, we can regard it as three row vectors stacked together.
+        Each row vector multiplies with the right matrix to get a new row vector.
+        And finally, all the new row vector stacked together in the same way.
+
+        The matrix is called \textbf{Identity Matrix}:
+                \begin{equation}
+                    \begin{bmatrix}
+                        1 & 0 & 0 \\
+                        0 & 1 & 0 \\
+                        0 & 0 & 1 \\
+                    \end{bmatrix}
+                \end{equation}
+        In the matrix multiplication, it's function like 1 in scalar multiplication.
+
+        So what kind of matrix can be achieved the following function?
+                \begin{equation}
+                    \text{row.2} - 2 \times \text{row.1}\quad (\text{don't use row.1})
+                \end{equation}
+        The answer is:
+                \begin{equation}
+                    \begin{bmatrix}
+                        1 & 0 & 0 \\
+                        -2 & 1 & 0 \\
+                        0 & 0 & 1 \\
+                    \end{bmatrix}
+                \end{equation}
+        
+        Then, all of the elimination operations can be written as:
+                \begin{equation}
+                    \begin{bmatrix}
+                        1 & 0 & 0 \\
+                        -2 & 1 & 0 \\
+                        0 & 0 & 1 \\
+                    \end{bmatrix}
+                    \times
+                    \begin{bmatrix}
+                        1 & 0 & 0 \\
+                        0 & 1 & 0 \\
+                        0 & -2 & 1 \\
+                    \end{bmatrix}
+                    \times
+                    A
+                \end{equation}
+
+    \subsection{Elimination's Failure and Permutation Matrix}
+        In what case, we couldn't use Gaussian Elimination to solve a system of equations?
+
+        When the pivot is 0, and all of the below elements are also 0, such as:
+                \begin{equation}
+                    \begin{bmatrix}
+                        1 & 2 & 1 \\
+                        0 & 0 & 0 \\
+                        0 & 0 & 1 \\
+                    \end{bmatrix}
+                \end{equation}
+        
+        In other case, we can use permutation matrix to exchange rows:
+                \begin{equation}
+                    \begin{bmatrix}
+                        0 & 1  \\
+                        1 & 0  \\
+                    \end{bmatrix}
+                    \times
+                    \begin{bmatrix}
+                        a & b  \\
+                        c & d  \\
+                    \end{bmatrix}
+                    =
+                    \begin{bmatrix}
+                        c & d  \\
+                        a & b  \\
+                    \end{bmatrix}
+                \end{equation}
+        also we can exchange columns:
+                \begin{equation}
+                    \begin{bmatrix}
+                        a & b  \\
+                        c & d  \\
+                    \end{bmatrix}
+                    \times
+                    \begin{bmatrix}
+                        0 & 1  \\
+                        1 & 0  \\
+                    \end{bmatrix}
+                    =
+                    \begin{bmatrix}
+                        b & a  \\
+                        d & c  \\
+                    \end{bmatrix}
+                \end{equation}
+    
+    \subsection{Precautions}
+        The matrix multiplication does not satisfy the commutative law:
+                \begin{equation}
+                    AB \neq BA
+                \end{equation}
+        
+        The matrix multiplication satisfies the associative law.
+                \begin{equation}
+                    E_2(E_1A) = (E_2E_1)A
+                \end{equation}
+        
+
+
+
+
+    
+    
+    
